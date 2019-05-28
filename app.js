@@ -1,8 +1,15 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const server = require("http").createServer(app);
-const io = require('socket.io')(server);
+require('dotenv').config({silent: true});
+const socket = require('socket.io');
+
+var port = process.env.PORT || 5000;
+
+var server = app.listen(port, function(){
+  console.log('listening for requests on port 4000,');
+});
+
 
 // Body Parser Middleware
 app.use(express.json());
@@ -14,13 +21,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Members API Routes
 app.use('/api/members', require('./routes/api/members'));
 
-
-// start server on the specified port and binding host
-server.listen(process.env.PORT, '0.0.0.0', function() {
-    // print a message when the server starts listening
-    console.log("server starting on " + process.env.PORT);
-  });
-
+const io = socket(server);
   io.on('connection', function(socket) {
     console.log('a user has connected');
  
@@ -32,4 +33,5 @@ server.listen(process.env.PORT, '0.0.0.0', function() {
       io.emit('chat message', "you: " + msg);
      });
   });
+  
   module.exports = app;
