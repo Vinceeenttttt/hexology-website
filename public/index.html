@@ -29,7 +29,7 @@
 <body>
         
     <div class="container-fluid pb-2" id="header">
-        <h1 class="text-center mb-3">Hexology</h1>
+        <h1 class="text-center mb-3"><a href="#" class="text-info">Hexology</a></h1>
         <form action="/api/members" method="POST" class="mb-4">
             <div class="form-group">
                     <label for="name" class="font-italic">Please enter your URL link below:</label>
@@ -91,8 +91,15 @@
         $('#m').val('');
         return false;
         });
+        $('#playpausebtn').click(function(){
+        socket.emit('timer','timer started') 
+        return false;
+        });
         socket.on('chat message', function(msg){
         $('#messages').append($('<li>').text(msg));
+        });
+        socket.on('timer', function(msg){
+        ('timer started').append($('<li>').text(msg));
         });
     });
 </script>
