@@ -18,18 +18,10 @@ function insertdoc(CollectionName, Obj){
       dbo.collection(CollectionName).insertOne(Obj, function(err, res) {
         if (err) throw err;
         console.log("1 document inserted");
-        client.close();
+        //client.close();
       });
   });
 }
-
-var CollectionName = "profiles";
-var myobj = {
-  name: "Robert",
-  level: "Beginner",
-  Interests: "EEE",
-  time: moment().format()
-};
 
 // Build a server
 var port = process.env.PORT || 5000;
@@ -55,18 +47,44 @@ const io = socket(server);
  
     // Handle incomming chat messages
     socket.on('chat message', function(msg) {
-  
-  
+ 
       console.log('message: ' + msg);
-      io.emit('chat message', "you: " + msg);
-     
+      io.emit('chat message', "you: " + msg);     
     });
 
+    //test
+    io.emit('people', 'Hello World');
+    io.emit('people', 'Che');
+    io.emit('people', 'Haojun');
+    io.emit('people', 'Wilson');
+    io.emit('location', 'London');
+    socket.on('people', function(msg) {
+      io.emit('people', msg);     
+    });
+
+    socket.on('location', function(msg) {
+      io.emit('location', msg);     
+    });
+
+    socket.on('number', function(msg) {
+      io.emit('number', msg);     
+    });
+
+    socket.on('other', function(msg) {
+      io.emit('other', msg);     
+    });
+    
+    // timer
     socket.on('timer', function(msg) {
-  
-      console.log('message: ' + msg);
       var start = Date.now();
       setInterval(function() {
+        var CollectionName = "profiles";
+        var myobj = {
+        name: "Robert",
+        level: "Beginner",
+        Interests: "EEE",
+        time: moment().format()
+        };
         insertdoc(CollectionName, myobj)
       }, 30000);
      
